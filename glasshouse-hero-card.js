@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.1.1';
+  const CARD_VERSION = '1.2.0';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -251,6 +251,8 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .summary i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px -1px var(--c); display: inline-block; }
 
 .modes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
+.modes.grid { display: grid; grid-template-columns: repeat(var(--mc, 3), minmax(0, 1fr)); max-width: 420px; }
+.modes.grid .chip { justify-content: center; min-width: 0; }
 .chip {
   --c: var(--gh-accent);
   display: inline-flex; align-items: center; gap: 8px;
@@ -940,7 +942,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
           ${summary.length ? `<span class="summary">${summary.map(([col, txt]) => `<span><i style="--c:var(${col})"></i>${esc(txt)}</span>`).join('')}</span>` : ''}
         </div>
         ${c.stats_style === 'compact' && c.stats.length ? this._renderMeters() : ''}
-        ${modes ? `<div class="modes" role="group" aria-label="Modes">${modes}</div>` : ''}
+        ${modes ? `<div class="modes${Number(c.mode_columns) > 0 ? ' grid' : ''}" role="group" aria-label="Modes"${Number(c.mode_columns) > 0 ? ` style="--mc:${Math.min(6, Math.round(Number(c.mode_columns)))}"` : ''}>${modes}</div>` : ''}
       </div>`;
     }
 

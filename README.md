@@ -59,6 +59,7 @@ from your config.
 | `weather` | entity | A `weather.*` entity. |
 | `people` | list | `person.*` / `device_tracker.*` ids, or `{entity, name}` objects. |
 | `modes` | list | Mode chips (see below). |
+| `mode_columns` | number | Lay the mode chips out as an even grid with this many columns (e.g. `3` → 3×2 for six modes). Default: chips wrap freely. |
 | `security` | map | `alarm`, `locks`, `openings` (see below). |
 | `alerts` | list | Alert rules (see below). |
 | `stats` | list | Up to 6 numbers (2–4 look best; see below). |
