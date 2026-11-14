@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.2.0';
+  const CARD_VERSION = '1.3.0';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -203,7 +203,7 @@ ha-card[data-alert="warn"] .aurora { --aur-3: var(--gh-warn); }
 .top {
   display: grid;
   gap: 18px;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.1fr) minmax(0, 1fr);
   align-items: stretch;
 }
 .size-medium .top { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
@@ -251,7 +251,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .summary i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px -1px var(--c); display: inline-block; }
 
 .modes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
-.modes.grid { display: grid; grid-template-columns: repeat(var(--mc, 3), minmax(0, 1fr)); max-width: 420px; }
+.modes.grid { display: grid; grid-template-columns: repeat(var(--mc, 3), minmax(0, 1fr)); }
 .modes.grid .chip { justify-content: center; min-width: 0; }
 .chip {
   --c: var(--gh-accent);
@@ -297,9 +297,16 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .wx-temp { display: flex; align-items: flex-start; }
 .wx-temp .deg { font-size: 18px; font-weight: 600; color: var(--gh-text-2); margin-top: 4px; margin-left: 2px; }
 .wx-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.wx-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--gh-text-2); }
+.wx-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--gh-text); }
 .wx-meta span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .wx-meta ha-icon { --mdc-icon-size: 15px; color: var(--gh-text-3); }
+.hr { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px; padding: 6px 0; border-top: 1px solid var(--gh-border); border-bottom: 1px solid var(--gh-border); }
+.hr > div { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
+.hr .ht { font-size: 11px; font-weight: 600; color: var(--gh-text-2); white-space: nowrap; }
+.hr ha-icon { --mdc-icon-size: 18px; color: var(--c); }
+.hr .hv { font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.hr .hp { font-size: 11px; font-weight: 600; color: var(--gh-water, #4dabf7); font-variant-numeric: tabular-nums; }
+.hr .hp.none { color: var(--gh-text-3); }
 .fc { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: auto; }
 .size-narrow .fc { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
 .fc > div {
@@ -314,17 +321,17 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .fc .label { font-size: 10px; }
 
 /* ---------- people + security */
-.right { display: flex; flex-direction: column; gap: 0; min-width: 0; padding: 12px 14px; }
-.people { display: flex; flex-wrap: wrap; gap: 6px 4px; padding-bottom: 10px; border-bottom: 1px solid var(--gh-border); align-items: flex-start; }
+.right { display: flex; flex-direction: column; justify-content: space-between; gap: 0; min-width: 0; padding: 12px 14px; }
+.people { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 6px 4px; padding-bottom: 12px; border-bottom: 1px solid var(--gh-border); align-items: flex-start; }
 .person {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  width: 72px; min-height: 44px; padding: 4px 2px; border-radius: 14px;
+  width: 84px; min-height: 44px; padding: 4px 2px; border-radius: 14px;
   transition: background 160ms ease;
 }
 .person:hover { background: var(--gh-surface); }
 .avatar {
   --c: var(--gh-neutral);
-  position: relative; width: 46px; height: 46px; border-radius: 50%;
+  position: relative; width: 54px; height: 54px; border-radius: 50%;
   display: grid; place-items: center;
   background: var(--gh-surface-2);
   box-shadow: 0 0 0 2px var(--gh-surface), 0 0 0 4px color-mix(in srgb, var(--c) 70%, transparent);
@@ -338,8 +345,8 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
   position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 50%;
   background: var(--c); border: 3px solid #141922;
 }
-.person .pname { font-size: 12px; font-weight: 600; max-width: 100%; text-align: center; margin-top: 2px; }
-.person .pstate { font-size: 11px; color: var(--gh-text-2); max-width: 100%; text-align: center; margin-top: -4px; }
+.person .pname { font-size: 13px; font-weight: 600; max-width: 100%; text-align: center; margin-top: 2px; }
+.person .pstate { font-size: 12px; color: var(--gh-text-2); max-width: 100%; text-align: center; margin-top: -4px; }
 .person.home .pstate { color: var(--c); }
 
 .sec { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; }
@@ -358,7 +365,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 }
 .row-icon ha-icon { --mdc-icon-size: 18px; }
 .row-icon.tone-neutral { background: var(--gh-surface-2); color: var(--gh-text-2); }
-.row-name { color: var(--gh-text-2); white-space: nowrap; }
+.row-name { color: var(--gh-text); font-weight: 500; white-space: nowrap; }
 .row-val { text-align: right; font-weight: 600; color: var(--c, var(--gh-text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .row-spacer { width: 36px; flex: none; }
 .row-more {
@@ -394,16 +401,16 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .stat .shead { display: flex; align-items: center; gap: 7px; position: relative; z-index: 1; min-width: 0; }
 .stat .shead ha-icon, .stat .shead ha-state-icon { --mdc-icon-size: 16px; color: var(--c); }
 .stat .metric { position: relative; z-index: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stats.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin-top: 4px; max-width: 420px; }
+.stats.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; margin-top: 6px; }
 .meter {
   --c: var(--gh-info);
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 8px;
   padding: 2px 0; background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; min-width: 0;
 }
 .meter ha-icon, .meter ha-state-icon { --mdc-icon-size: 15px; color: var(--c); }
-.meter .ml { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gh-text-2);
+.meter .ml { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gh-text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.meter .mv { font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
+.meter .mv { font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
 .meter .mv small { font-size: 11px; font-weight: 600; color: var(--gh-text-3); margin-left: 1px; }
 .meter .bar { grid-column: 1 / -1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
 .meter .bar i { display: block; height: 100%; width: var(--p, 0%); border-radius: inherit; background: var(--c);
@@ -725,8 +732,22 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
       } catch (e) {
         this._wxSubscribedFor = null;
       }
+      // hourly strip (fills the weather panel with the next few hours)
+      if (c.hourly !== false && feats & 2 && !this._wxHourUnsub && !this._wxHourPending) {
+        this._wxHourPending = true;
+        try {
+          Promise.resolve(h.connection.subscribeMessage(
+            (msg) => { this._wxHourly = (msg && msg.forecast) || null; this._render(); },
+            { type: 'weather/subscribe_forecast', forecast_type: 'hourly', entity_id: c.weather }
+          )).then((unsub) => { this._wxHourUnsub = unsub; this._wxHourPending = false; })
+            .catch(() => { this._wxHourPending = false; });
+        } catch (e) { this._wxHourPending = false; }
+      }
     }
     _unsubForecast() {
+      if (typeof this._wxHourUnsub === 'function') { try { this._wxHourUnsub(); } catch (e) { /* ignore */ } }
+      this._wxHourUnsub = null;
+      this._wxHourly = null;
       if (typeof this._wxUnsub === 'function') {
         try {
           this._wxUnsub();
@@ -946,6 +967,21 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
       </div>`;
     }
 
+    _renderHourly(lang, tz) {
+      const now = Date.now();
+      const hrs = (this._wxHourly || []).filter((f) => f && f.datetime && new Date(f.datetime).getTime() > now - 30 * 60e3).slice(0, 6);
+      if (hrs.length < 3) return '';
+      const fmt = (d) => {
+        try { return new Intl.DateTimeFormat(lang, { hour: 'numeric', timeZone: tz }).format(d).replace(/\s?([AP])M$/i, (m, x) => x.toLowerCase()); } catch (e) { return ''; }
+      };
+      return `<div class="hr">${hrs.map((f, i) => {
+        const [fi, , fcol] = weatherInfo(f.condition);
+        const pp = f.precipitation_probability != null ? Math.round(f.precipitation_probability) : null;
+        return `<div style="--c:var(${fcol})"><span class="ht">${i === 0 ? 'Now' : esc(fmt(new Date(f.datetime)))}</span><ha-icon icon="${fi}"></ha-icon>
+          <span class="hv">${this._temp(f.temperature)}°</span><span class="hp${pp ? '' : ' none'}">${pp ? `${pp}%` : '·'}</span></div>`;
+      }).join('')}</div>`;
+    }
+
     _renderWeather() {
       const c = this._config;
       if (!c.weather) return '';
@@ -1017,6 +1053,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
             ${lo != null ? `<span><span class="muted">L</span>&nbsp;<b>${lo}°</b></span>` : ''}
             ${meta.map(([i, v]) => `<span><ha-icon icon="${i}"></ha-icon>${esc(v)}</span>`).join('')}
           </div>
+          ${this._renderHourly(lang, tz, unit)}
           ${days ? `<div class="fc">${days}</div>` : ''}
         </button>
       </div>`;

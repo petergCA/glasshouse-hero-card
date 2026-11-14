@@ -57,6 +57,7 @@ from your config.
 |---|---|---|
 | `title` | string | Replaces the time-of-day greeting. |
 | `weather` | entity | A `weather.*` entity. |
+| `hourly` | boolean | Show the next 6 hours (time, icon, temperature, rain chance) when the weather entity supports hourly forecasts. Default `true`. |
 | `people` | list | `person.*` / `device_tracker.*` ids, or `{entity, name}` objects. |
 | `modes` | list | Mode chips (see below). |
 | `mode_columns` | number | Lay the mode chips out as an even grid with this many columns (e.g. `3` → 3×2 for six modes). Default: chips wrap freely. |
