@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.0';
+  const CARD_VERSION = '1.3.1';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -163,7 +163,7 @@ ha-card {
   padding: calc(var(--gh-pad) + 6px);
   color: var(--gh-text);
   font-family: var(--gh-font);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 1.35;
   box-shadow: none;
@@ -221,14 +221,14 @@ ha-card[data-alert="warn"] .aurora { --aur-3: var(--gh-warn); }
 }
 
 .label {
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .09em;
+  font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em;
   color: var(--gh-text-2);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.title { font-size: 16px; font-weight: 650; }
+.title { font-size: 18px; font-weight: 650; }
 .metric { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; line-height: 1.1; }
 .unit { font-size: 13px; font-weight: 600; color: var(--gh-text-2); margin-left: 3px; letter-spacing: 0; }
-.hero { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
+.hero { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
 .muted { color: var(--gh-text-2); }
 .dim { color: var(--gh-text-3); }
 .ellip { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
@@ -245,7 +245,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .left { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 4px 2px 0; }
 .greet { margin: 2px 0 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .timeline { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; min-width: 0; }
-.clock { font-size: 16px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
+.clock { font-size: 19px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
 .summary { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--gh-text-2); min-width: 0; }
 .summary span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .summary i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px -1px var(--c); display: inline-block; }
@@ -262,10 +262,10 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
   background: var(--gh-surface-2);
   border: 1px solid var(--gh-border);
   color: var(--gh-text);
-  font-size: 13px; font-weight: 600;
+  font-size: 15px; font-weight: 600;
   transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
-.chip ha-icon, .chip ha-state-icon { --mdc-icon-size: 20px; color: var(--gh-text-2); transition: color 160ms ease; }
+.chip ha-icon, .chip ha-state-icon { --mdc-icon-size: 22px; color: var(--gh-text-2); transition: color 160ms ease; }
 .chip .ellip { max-width: 160px; }
 .chip.on {
   background: color-mix(in srgb, var(--c) 16%, transparent);
@@ -302,10 +302,10 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .wx-meta ha-icon { --mdc-icon-size: 15px; color: var(--gh-text-3); }
 .hr { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px; padding: 6px 0; border-top: 1px solid var(--gh-border); border-bottom: 1px solid var(--gh-border); }
 .hr > div { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
-.hr .ht { font-size: 11px; font-weight: 600; color: var(--gh-text-2); white-space: nowrap; }
-.hr ha-icon { --mdc-icon-size: 18px; color: var(--c); }
-.hr .hv { font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; }
-.hr .hp { font-size: 11px; font-weight: 600; color: var(--gh-water, #4dabf7); font-variant-numeric: tabular-nums; }
+.hr .ht { font-size: 13px; font-weight: 600; color: var(--gh-text-2); white-space: nowrap; }
+.hr ha-icon { --mdc-icon-size: 22px; color: var(--c); }
+.hr .hv { font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.hr .hp { font-size: 13px; font-weight: 600; color: var(--gh-water, #4dabf7); font-variant-numeric: tabular-nums; }
 .hr .hp.none { color: var(--gh-text-3); }
 .fc { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: auto; }
 .size-narrow .fc { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
@@ -315,17 +315,18 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
   min-width: 0;
 }
 .fc > div:first-child { background: var(--gh-surface-2); }
-.fc ha-icon { --mdc-icon-size: 20px; color: var(--c); }
+.fc ha-icon { --mdc-icon-size: 24px; color: var(--c); }
 .fc .hi { font-weight: 650; font-variant-numeric: tabular-nums; }
 .fc .lo { color: var(--gh-text-3); font-variant-numeric: tabular-nums; margin-left: 3px; }
-.fc .label { font-size: 10px; }
+.fc .label { font-size: 12px; }
+.fc > div > span:last-child { font-size: 16px; }
 
 /* ---------- people + security */
 .right { display: flex; flex-direction: column; justify-content: space-between; gap: 0; min-width: 0; padding: 12px 14px; }
-.people { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 6px 4px; padding-bottom: 12px; border-bottom: 1px solid var(--gh-border); align-items: flex-start; }
+.people { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; padding-bottom: 12px; border-bottom: 1px solid var(--gh-border); align-items: flex-start; }
 .person {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  width: 84px; min-height: 44px; padding: 4px 2px; border-radius: 14px;
+  width: 88px; min-height: 44px; padding: 4px 2px; border-radius: 14px;
   transition: background 160ms ease;
 }
 .person:hover { background: var(--gh-surface); }
@@ -345,8 +346,8 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
   position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 50%;
   background: var(--c); border: 3px solid #141922;
 }
-.person .pname { font-size: 13px; font-weight: 600; max-width: 100%; text-align: center; margin-top: 2px; }
-.person .pstate { font-size: 12px; color: var(--gh-text-2); max-width: 100%; text-align: center; margin-top: -4px; }
+.person .pname { font-size: 15px; font-weight: 600; max-width: 100%; text-align: center; margin-top: 2px; }
+.person .pstate { font-size: 13px; color: var(--gh-text-2); max-width: 100%; text-align: center; margin-top: -4px; }
 .person.home .pstate { color: var(--c); }
 
 .sec { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; }
@@ -365,8 +366,8 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 }
 .row-icon ha-icon { --mdc-icon-size: 18px; }
 .row-icon.tone-neutral { background: var(--gh-surface-2); color: var(--gh-text-2); }
-.row-name { color: var(--gh-text); font-weight: 500; white-space: nowrap; }
-.row-val { text-align: right; font-weight: 600; color: var(--c, var(--gh-text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.row-name { color: var(--gh-text); font-size: 16px; font-weight: 500; white-space: nowrap; }
+.row-val { text-align: right; font-size: 16px; font-weight: 650; color: var(--c, var(--gh-text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .row-spacer { width: 36px; flex: none; }
 .row-more {
   width: 36px; min-height: 44px; display: grid; place-items: center; border-radius: 12px; color: var(--gh-text-3);
@@ -407,12 +408,12 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 8px;
   padding: 2px 0; background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; min-width: 0;
 }
-.meter ha-icon, .meter ha-state-icon { --mdc-icon-size: 15px; color: var(--c); }
-.meter .ml { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gh-text);
+.meter ha-icon, .meter ha-state-icon { --mdc-icon-size: 18px; color: var(--c); }
+.meter .ml { font-size: 13px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; color: var(--gh-text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.meter .mv { font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
-.meter .mv small { font-size: 11px; font-weight: 600; color: var(--gh-text-3); margin-left: 1px; }
-.meter .bar { grid-column: 1 / -1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
+.meter .mv { font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
+.meter .mv small { font-size: 12px; font-weight: 600; color: var(--gh-text-3); margin-left: 1px; }
+.meter .bar { grid-column: 1 / -1; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
 .meter .bar i { display: block; height: 100%; width: var(--p, 0%); border-radius: inherit; background: var(--c);
   box-shadow: 0 0 8px -2px var(--c); transition: width 400ms ease; }
 .meter.unavail { opacity: .45; }
