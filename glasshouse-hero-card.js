@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.1.0';
+  const CARD_VERSION = '1.1.1';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -403,7 +403,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .meter .mv { font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
 .meter .mv small { font-size: 11px; font-weight: 600; color: var(--gh-text-3); margin-left: 1px; }
-.meter .bar { grid-column: 1 / -1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.meter .bar { grid-column: 1 / -1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
 .meter .bar i { display: block; height: 100%; width: var(--p, 0%); border-radius: inherit; background: var(--c);
   box-shadow: 0 0 8px -2px var(--c); transition: width 400ms ease; }
 .meter.unavail { opacity: .45; }
@@ -1208,6 +1208,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 
     /** stats_style: compact — one slim row of labelled meters (bar = value / max, default max 100). */
     _renderMeters() {
+      const CSS_NAMED = new Set(['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'white', 'black', 'gray', 'grey', 'teal', 'cyan', 'magenta', 'pink', 'gold', 'transparent', 'currentcolor']);
       const c = this._config;
       const h = this._hass;
       return `<div class="stats compact" style="--n:${c.stats.length}">${c.stats
@@ -1218,9 +1219,11 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
           const n = st ? Number(st.state) : NaN;
           const max = Number(s.max) > 0 ? Number(s.max) : 100;
           const pct = !ua && Number.isFinite(n) ? Math.max(0, Math.min(100, (n / max) * 100)) : 0;
-          let color = s.color ? esc(s.color) : 'var(--gh-info)';
+          // accent names (ok, warn, alert, info…) map to theme tokens; anything else is used as a CSS colour
+          const tok = (v) => (/^[a-z][a-z0-9-]*$/i.test(String(v)) && !CSS_NAMED.has(String(v).toLowerCase()) ? `var(--gh-${v})` : String(v));
+          let color = s.color ? esc(tok(s.color)) : 'var(--gh-ok)';
           for (const t of [].concat(s.thresholds || [])) {
-            if (t && t.above != null && n > Number(t.above)) color = esc(t.color && !String(t.color).startsWith('#') && !String(t.color).includes('(') ? `var(--gh-${t.color})` : t.color);
+            if (t && t.above != null && t.color && n > Number(t.above)) color = esc(tok(t.color));
           }
           const { value, unit } = st ? this._statValue(s, st) : { value: '—', unit: '' };
           return `<button class="meter${ua ? ' unavail' : ''}" style="--c:${color};--p:${pct.toFixed(1)}%" data-key="s-${i}" data-act="more" data-entity="${esc(s.entity)}"
