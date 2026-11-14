@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.1';
+  const CARD_VERSION = '1.3.2';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -403,6 +403,9 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .stat .shead ha-icon, .stat .shead ha-state-icon { --mdc-icon-size: 16px; color: var(--c); }
 .stat .metric { position: relative; z-index: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .stats.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; margin-top: 6px; }
+/* in the greeting panel: centre the meters in the space between the time line and the mode chips */
+.left .stats.compact { margin: auto 0; }
+.left .stats.compact + .modes { margin-top: 0; }
 .meter {
   --c: var(--gh-info);
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 8px;
