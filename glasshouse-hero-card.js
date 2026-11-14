@@ -392,7 +392,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .stat .shead { display: flex; align-items: center; gap: 7px; position: relative; z-index: 1; min-width: 0; }
 .stat .shead ha-icon, .stat .shead ha-state-icon { --mdc-icon-size: 16px; color: var(--c); }
 .stat .metric { position: relative; z-index: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stats.compact { gap: 8px 18px; }
+.stats.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin-top: 4px; max-width: 420px; }
 .meter {
   --c: var(--gh-info);
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 8px;
@@ -939,6 +939,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
           <span class="clock">${esc(t.time)}</span>
           ${summary.length ? `<span class="summary">${summary.map(([col, txt]) => `<span><i style="--c:var(${col})"></i>${esc(txt)}</span>`).join('')}</span>` : ''}
         </div>
+        ${c.stats_style === 'compact' && c.stats.length ? this._renderMeters() : ''}
         ${modes ? `<div class="modes" role="group" aria-label="Modes">${modes}</div>` : ''}
       </div>`;
     }
@@ -1185,7 +1186,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
       const c = this._config;
       if (!c.stats.length) return '';
       const h = this._hass;
-      if (c.stats_style === 'compact') return this._renderMeters();
+      if (c.stats_style === 'compact') return ''; // drawn in the left panel as a 2×2 block
       return `<div class="stats" style="--n:${c.stats.length}">${c.stats
         .map((s, i) => {
           const st = h.states[s.entity];
