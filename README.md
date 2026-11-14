@@ -62,6 +62,7 @@ from your config.
 | `security` | map | `alarm`, `locks`, `openings` (see below). |
 | `alerts` | list | Alert rules (see below). |
 | `stats` | list | Up to 6 numbers (2–4 look best; see below). |
+| `stats_style` | `tiles` / `compact` | `tiles` = sparkline tiles; `compact` = one slim row of labelled meters with a thin bar (value ÷ `max`, default 100), coloured by `thresholds` (`[{above, color}]`). |
 
 ### `modes[]`
 

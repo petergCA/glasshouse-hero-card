@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.0.0';
+  const CARD_VERSION = '1.1.0';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -392,6 +392,21 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .stat .shead { display: flex; align-items: center; gap: 7px; position: relative; z-index: 1; min-width: 0; }
 .stat .shead ha-icon, .stat .shead ha-state-icon { --mdc-icon-size: 16px; color: var(--c); }
 .stat .metric { position: relative; z-index: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stats.compact { gap: 8px 18px; }
+.meter {
+  --c: var(--gh-info);
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 8px;
+  padding: 2px 0; background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; min-width: 0;
+}
+.meter ha-icon, .meter ha-state-icon { --mdc-icon-size: 15px; color: var(--c); }
+.meter .ml { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gh-text-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meter .mv { font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--gh-text); }
+.meter .mv small { font-size: 11px; font-weight: 600; color: var(--gh-text-3); margin-left: 1px; }
+.meter .bar { grid-column: 1 / -1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.meter .bar i { display: block; height: 100%; width: var(--p, 0%); border-radius: inherit; background: var(--c);
+  box-shadow: 0 0 8px -2px var(--c); transition: width 400ms ease; }
+.meter.unavail { opacity: .45; }
 .spark { position: absolute; left: 0; right: 0; bottom: 0; height: 38px; width: 100%; z-index: 0; pointer-events: none; }
 .spark path.line { fill: none; stroke: var(--c); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
 .spark path.area { stroke: none; }
@@ -1170,6 +1185,7 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
       const c = this._config;
       if (!c.stats.length) return '';
       const h = this._hass;
+      if (c.stats_style === 'compact') return this._renderMeters();
       return `<div class="stats" style="--n:${c.stats.length}">${c.stats
         .map((s, i) => {
           const st = h.states[s.entity];
@@ -1184,6 +1200,33 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
               ${spark}
               <span class="shead">${this._iconHtml(s.icon, s.entity)}<span class="label">${esc(name)}</span></span>
               <span class="metric">${esc(value)}${unit ? `<span class="unit">${esc(unit)}</span>` : ''}</span>
+            </button>`;
+        })
+        .join('')}</div>`;
+    }
+
+    /** stats_style: compact — one slim row of labelled meters (bar = value / max, default max 100). */
+    _renderMeters() {
+      const c = this._config;
+      const h = this._hass;
+      return `<div class="stats compact" style="--n:${c.stats.length}">${c.stats
+        .map((s, i) => {
+          const st = h.states[s.entity];
+          const ua = isUnavailable(st);
+          const name = nameOf(h, s.entity, s.name);
+          const n = st ? Number(st.state) : NaN;
+          const max = Number(s.max) > 0 ? Number(s.max) : 100;
+          const pct = !ua && Number.isFinite(n) ? Math.max(0, Math.min(100, (n / max) * 100)) : 0;
+          let color = s.color ? esc(s.color) : 'var(--gh-info)';
+          for (const t of [].concat(s.thresholds || [])) {
+            if (t && t.above != null && n > Number(t.above)) color = esc(t.color && !String(t.color).startsWith('#') && !String(t.color).includes('(') ? `var(--gh-${t.color})` : t.color);
+          }
+          const { value, unit } = st ? this._statValue(s, st) : { value: '—', unit: '' };
+          return `<button class="meter${ua ? ' unavail' : ''}" style="--c:${color};--p:${pct.toFixed(1)}%" data-key="s-${i}" data-act="more" data-entity="${esc(s.entity)}"
+              aria-label="${esc(name)}: ${esc(value)} ${esc(unit)}">
+              ${this._iconHtml(s.icon, s.entity)}<span class="ml">${esc(name)}</span>
+              <span class="mv">${esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</span>
+              <span class="bar"><i></i></span>
             </button>`;
         })
         .join('')}</div>`;
