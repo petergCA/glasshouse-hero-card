@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.2';
+  const CARD_VERSION = '1.3.3';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -297,7 +297,8 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .wx-temp { display: flex; align-items: flex-start; }
 .wx-temp .deg { font-size: 18px; font-weight: 600; color: var(--gh-text-2); margin-top: 4px; margin-left: 2px; }
 .wx-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.wx-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--gh-text); }
+.wx-meta { display: grid; grid-template-columns: repeat(2, auto); gap: 8px 18px; margin-left: auto; align-content: center; color: var(--gh-text); font-size: 16px; }
+.size-narrow .wx-meta { gap: 6px 12px; font-size: 14px; }
 .wx-meta span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .wx-meta ha-icon { --mdc-icon-size: 15px; color: var(--gh-text-3); }
 .hr { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px; padding: 6px 0; border-top: 1px solid var(--gh-border); border-bottom: 1px solid var(--gh-border); }
@@ -1051,11 +1052,10 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
               <div class="wx-temp"><span class="hero">${esc(this._temp(a.temperature))}</span><span class="deg">${esc(unit || '°')}</span></div>
               <span class="title ellip">${esc(cond)}</span>
             </div>
-          </div>
-          <div class="wx-meta">
-            ${hi != null ? `<span><span class="muted">H</span>&nbsp;<b>${hi}°</b></span>` : ''}
-            ${lo != null ? `<span><span class="muted">L</span>&nbsp;<b>${lo}°</b></span>` : ''}
-            ${meta.map(([i, v]) => `<span><ha-icon icon="${i}"></ha-icon>${esc(v)}</span>`).join('')}
+            <div class="wx-meta">
+              ${hi != null ? `<span><span class="muted">H</span>&nbsp;<b>${hi}°</b></span>` : ''}
+              ${meta.map(([i, v]) => `<span><ha-icon icon="${i}"></ha-icon>${esc(v)}</span>`).join('')}
+            </div>
           </div>
           ${this._renderHourly(lang, tz, unit)}
           ${days ? `<div class="fc">${days}</div>` : ''}
