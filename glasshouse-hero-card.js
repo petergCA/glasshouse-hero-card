@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.4';
+  const CARD_VERSION = '1.3.5';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -252,7 +252,10 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 
 .modes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
 .modes.grid { display: grid; grid-template-columns: repeat(var(--mc, 3), minmax(0, 1fr)); }
-.modes.grid .chip { justify-content: center; min-width: 0; }
+.modes.grid { container-type: inline-size; }
+/* grid chips: tighter padding and a label that scales with the row, so names like Morning and Vacation fit */
+.modes.grid .chip { justify-content: center; min-width: 0; gap: 5px; padding: 0 8px; font-size: clamp(12.5px, 4.4cqi, 15px); }
+.modes.grid .chip ha-icon, .modes.grid .chip ha-state-icon { --mdc-icon-size: 19px; flex: 0 0 auto; }
 .chip {
   --c: var(--gh-accent);
   display: inline-flex; align-items: center; gap: 8px;
@@ -320,8 +323,9 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .fc .hi { font-weight: 650; font-variant-numeric: tabular-nums; }
 .fc .lo { color: var(--gh-text-3); font-variant-numeric: tabular-nums; }
 .fc .label { font-size: 12px; }
-/* high and low sit side by side, and the low drops under the high when the day tile is too narrow for both */
-.fc > div > span:last-child { font-size: 16px; display: flex; flex-wrap: wrap; justify-content: center; column-gap: 4px; line-height: 1.2; }
+/* high and low stay on one line; the numbers shrink with the forecast row so they always fit their day tile */
+.fc { container-type: inline-size; }
+.fc > div > span:last-child { font-size: clamp(12px, 4.6cqi, 16px); white-space: nowrap; display: flex; justify-content: center; gap: 3px; }
 
 /* ---------- people + security */
 .right { display: flex; flex-direction: column; justify-content: space-between; gap: 0; min-width: 0; padding: 12px 14px; }
