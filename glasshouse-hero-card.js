@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.3';
+  const CARD_VERSION = '1.3.4';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -208,7 +208,7 @@ ha-card[data-alert="warn"] .aurora { --aur-3: var(--gh-warn); }
 }
 .size-medium .top { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
 .size-medium .right { grid-column: 1 / -1; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); display: grid; }
-.size-medium .right .people { border-bottom: 0; padding-bottom: 0; border-right: 1px solid var(--gh-border); padding-right: 14px; }
+.size-medium .right .people { border-bottom: 0; padding-bottom: 0; border-right: 1px solid var(--gh-border); padding-right: 14px; align-content: center; align-items: center; }
 .size-narrow .top { grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .size-narrow .wrap { gap: 14px; }
 
@@ -318,9 +318,10 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .fc > div:first-child { background: var(--gh-surface-2); }
 .fc ha-icon { --mdc-icon-size: 24px; color: var(--c); }
 .fc .hi { font-weight: 650; font-variant-numeric: tabular-nums; }
-.fc .lo { color: var(--gh-text-3); font-variant-numeric: tabular-nums; margin-left: 3px; }
+.fc .lo { color: var(--gh-text-3); font-variant-numeric: tabular-nums; }
 .fc .label { font-size: 12px; }
-.fc > div > span:last-child { font-size: 16px; }
+/* high and low sit side by side, and the low drops under the high when the day tile is too narrow for both */
+.fc > div > span:last-child { font-size: 16px; display: flex; flex-wrap: wrap; justify-content: center; column-gap: 4px; line-height: 1.2; }
 
 /* ---------- people + security */
 .right { display: flex; flex-direction: column; justify-content: space-between; gap: 0; min-width: 0; padding: 12px 14px; }
