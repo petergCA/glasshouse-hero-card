@@ -7,12 +7,30 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.7';
+  const CARD_VERSION = '1.4.1';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
   const HISTORY_REFRESH_MS = 5 * 60 * 1000;
   const NARROW_MAX = 500;
+  const CONFIRM_MS = 4000; // second tap needed within this to unlock or move a garage door
+  const PENDING_MS = 20000; // "No response" if the device hasn't changed by then
+  /** What tapping a lock's or garage door's status does, or null for anything else (or while it can't act). */
+  function toggleAction(id, st) {
+    if (!st || ['unavailable', 'unknown'].includes(st.state)) return null;
+    const d = String(id).split('.')[0];
+    if (d === 'lock') {
+      if (st.state === 'locked') return { verb: 'Unlock', ing: 'Unlocking', service: 'lock.unlock', confirm: true };
+      if (['unlocked', 'open', 'jammed'].includes(st.state)) return { verb: 'Lock', ing: 'Locking', service: 'lock.lock', confirm: false };
+      return null; // locking / unlocking in progress
+    }
+    if (d === 'cover') {
+      if (st.state === 'closed') return { verb: 'Open', ing: 'Opening', service: 'cover.open_cover', confirm: true };
+      if (st.state === 'open') return { verb: 'Close', ing: 'Closing', service: 'cover.close_cover', confirm: true };
+      return null; // opening / closing
+    }
+    return null;
+  }
   const WIDE_MIN = 900;
 
   if (!window.__GLASSHOUSE_HERO_BANNER__) {
@@ -385,6 +403,16 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .sub { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 36px; padding: 0 8px; border-radius: 10px; }
 .sub:hover { background: var(--gh-surface); }
 .sub .v { font-weight: 600; color: var(--c); white-space: nowrap; }
+.sub .sn { flex: 1 1 auto; min-width: 0; text-align: left; align-self: stretch; display: block; line-height: 36px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* a lock's or garage door's status is a button: a soft chip that toggles the device */
+.sub .v.tg { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 9px; margin-right: -6px; flex: none; border-radius: 999px; cursor: pointer;
+  background: color-mix(in srgb, var(--c) 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent); }
+.sub .v.tg:hover { background: color-mix(in srgb, var(--c) 20%, transparent); }
+.sub .v.tg.armed { color: var(--gh-text); background: color-mix(in srgb, var(--gh-warn) 30%, transparent); box-shadow: inset 0 0 0 1px var(--gh-warn); }
+.sub .v.tg.busy { color: var(--gh-text-2); background: var(--gh-surface-2); box-shadow: none; cursor: default; }
+.sub .v.tg.err { color: var(--gh-alert); background: color-mix(in srgb, var(--gh-alert) 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gh-alert) 40%, transparent); }
+.sub .spin { width: 11px; height: 11px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: gh-spin .8s linear infinite; }
+@keyframes gh-spin { to { transform: rotate(360deg); } }
 
 /* ---------- bottom */
 .bottom { display: grid; gap: 18px; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); align-items: start; }
@@ -1244,8 +1272,18 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
               .map((x, j) => {
                 const tone = info.key === 'locks' ? lockTone(x.st) : isUnavailable(x.st) ? 'neutral' : isOpen(x.st) ? 'warn' : 'ok';
                 const v = isUnavailable(x.st) ? 'Unavailable' : this._fmtState(x.st);
-                return `<button class="sub" data-key="${info.key}-s${j}" data-act="more" data-entity="${esc(x.id)}" style="--c:var(${TONE[tone]})" aria-label="${esc(x.name)}: ${esc(v)}">
+                const act = toggleAction(x.id, x.st);
+                if (!act) {
+                  return `<button class="sub" data-key="${info.key}-s${j}" data-act="more" data-entity="${esc(x.id)}" style="--c:var(${TONE[tone]})" aria-label="${esc(x.name)}: ${esc(v)}">
                   <span class="ellip">${esc(x.name)}</span><span class="v">${esc(v)}</span></button>`;
+                }
+                const pend = this._pendingFor(x.id, x.st), armed = this._armedFor(x.id, act);
+                const label = pend ? (pend.failed ? 'No response · retry' : `${act.ing}…`) : armed ? `Tap to ${act.verb.toLowerCase()}` : v;
+                const cls = pend ? (pend.failed ? ' err' : ' busy') : armed ? ' armed' : '';
+                return `<div class="sub" style="--c:var(${TONE[tone]})">
+                  <button class="sn ellip" data-key="${info.key}-s${j}" data-act="more" data-entity="${esc(x.id)}" aria-label="${esc(x.name)} details">${esc(x.name)}</button>
+                  <button class="v tg${cls}" data-key="${info.key}-t${j}" data-act="toggle" data-entity="${esc(x.id)}" ${pend && !pend.failed ? 'disabled' : ''}
+                    aria-label="${esc(x.name)}: ${esc(v)}. ${armed ? `Tap again to ${act.verb.toLowerCase()}` : act.verb}">${pend && !pend.failed ? '<span class="spin"></span>' : ''}${esc(label)}</button></div>`;
               })
               .join('')}</div>`
           : '';
@@ -1439,6 +1477,49 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
       if (act === 'locks') return this._moreInfo(this._locksInfo().target);
       if (act === 'openings') return this._moreInfo(this._openingsInfo().target);
       if (act === 'mode') return this._toggleMode(Number(el.dataset.i));
+      if (act === 'toggle') return this._toggleDevice(el.dataset.entity);
+    }
+
+    /** Lock/unlock a lock or open/close a garage door. Locking is one tap; unlocking, opening and closing need a
+     *  second tap within CONFIRM_MS. "Locking…" shows until the device answers (or "No response" after PENDING_MS). */
+    _toggleDevice(id) {
+      const st = this._hass && this._hass.states[id];
+      const act = toggleAction(id, st);
+      if (!act || this._pendingFor(id, st)) return;
+      this._confirm = this._confirm || {};
+      if (act.confirm && !this._armedFor(id, act)) {
+        this._confirm[id] = { verb: act.verb, until: Date.now() + CONFIRM_MS };
+        this._haptic();
+        clearTimeout(this._confirmT);
+        this._confirmT = setTimeout(() => this._render(), CONFIRM_MS + 50);
+        return this._render();
+      }
+      delete this._confirm[id];
+      this._pending = this._pending || {};
+      const p = (this._pending[id] = { from: st.state, until: Date.now() + PENDING_MS, failed: false });
+      p.timer = setTimeout(() => this._render(), PENDING_MS + 50);
+      this._haptic();
+      const [d, svc] = act.service.split('.');
+      const fail = () => { p.until = 0; p.error = true; this._render(); };
+      try { const r = this._hass.callService(d, svc, { entity_id: id }); if (r && typeof r.catch === 'function') r.catch(fail); } catch (e) { setTimeout(fail, 0); }
+      this._render();
+    }
+    _armedFor(id, act) {
+      const a = this._confirm && this._confirm[id];
+      return !!(a && act && a.verb === act.verb && Date.now() < a.until);
+    }
+    /** The pending action for an entity, if it hasn't answered yet; {failed: true} once it timed out or errored. */
+    _pendingFor(id, st) {
+      const p = this._pending && this._pending[id];
+      if (!p) return null;
+      if (st && st.state !== p.from) { clearTimeout(p.timer); delete this._pending[id]; return null; } // the device answered
+      if (p.error || Date.now() >= p.until) {
+        if (p.shown) { delete this._pending[id]; return null; }
+        p.shown = true;
+        setTimeout(() => this._render(), 5000); // show "No response" for a few seconds
+        return { failed: true };
+      }
+      return p;
     }
 
     _hold(el) {
