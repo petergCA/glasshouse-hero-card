@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.5';
+  const CARD_VERSION = '1.3.6';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -468,6 +468,39 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .size-narrow .hero { font-size: 34px; }
 .size-narrow .right { padding: 12px; }
 .size-narrow .person { width: 68px; }
+
+/* ---------- tight columns (three-column layout on a small or zoomed screen): fit the text instead of cutting it off */
+.left, .weather-panel, .right { container-type: inline-size; }
+.left { container-name: gh-left; }
+.weather-panel { container-name: gh-wx; }
+.right { container-name: gh-right; }
+/* people sit centred in the space above the security list, not stuck to the top */
+.size-wide .right .people { flex: 1; align-content: center; align-items: center; }
+@container gh-left (max-width: 360px) {
+  /* meters: name on the first line, value beside the bar, so the full name fits */
+  .stats.compact { gap: 10px 16px; }
+  .meter { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .meter .ml { grid-column: 2 / -1; font-size: 12px; letter-spacing: .03em; }
+  .meter .bar { grid-column: 1 / 3; }
+  .meter .mv { grid-column: 3; grid-row: 2; font-size: 15px; }
+  /* mode chips: icon above the label */
+  .modes.grid .chip { flex-direction: column; gap: 2px; padding: 6px 4px; min-height: 54px; border-radius: 16px; font-size: 13px; }
+  .modes.grid .chip ha-icon, .modes.grid .chip ha-state-icon { --mdc-icon-size: 18px; }
+  .modes.grid .chip .ellip { max-width: 100%; }
+}
+@container gh-wx (max-width: 340px) {
+  .wx-main { gap: 10px; }
+  .wx-icon { width: 46px; height: 46px; border-radius: 14px; }
+  .wx-icon ha-icon { --mdc-icon-size: 26px; }
+  .wx-temp .hero { font-size: 38px; }
+  .wx-temp .deg { font-size: 15px; }
+  .wx-meta { gap: 6px 10px; font-size: 14px; }
+}
+@container gh-right (max-width: 320px) {
+  .row-main { gap: 8px; padding: 4px 2px; }
+  .row-name, .row-val { font-size: 14.5px; }
+  .row-spacer { width: 24px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .aurora, .pill.sev-alert, .row.pulse .row-icon, .chip.flash { animation: none !important; }
