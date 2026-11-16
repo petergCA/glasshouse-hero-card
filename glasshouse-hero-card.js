@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const CARD_VERSION = '1.3.6';
+  const CARD_VERSION = '1.3.7';
   const TAG = 'glasshouse-hero-card';
   const HOLD_MS = 500;
   const CLOCK_MS = 30 * 1000;
@@ -323,9 +323,9 @@ ha-icon, ha-state-icon { --mdc-icon-size: 22px; display: inline-flex; flex: none
 .fc .hi { font-weight: 650; font-variant-numeric: tabular-nums; }
 .fc .lo { color: var(--gh-text-3); font-variant-numeric: tabular-nums; }
 .fc .label { font-size: 12px; }
-/* high and low stay on one line; the numbers shrink with the forecast row so they always fit their day tile */
-.fc { container-type: inline-size; }
-.fc > div > span:last-child { font-size: clamp(12px, 4.6cqi, 16px); white-space: nowrap; display: flex; justify-content: center; gap: 3px; }
+/* high on top, low underneath (Peter, 11/15) */
+.fc > div > span:last-child { font-size: 16px; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 1px; line-height: 1.15; }
+.fc .lo { font-size: 14px; }
 
 /* ---------- people + security */
 .right { display: flex; flex-direction: column; justify-content: space-between; gap: 0; min-width: 0; padding: 12px 14px; }
